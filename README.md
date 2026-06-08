@@ -28,7 +28,7 @@ Follow these instructions to run the project locally:
 bash
 
 Clone the repository
-git clone []
+git clone [https://github.com/legaspi-ronmichael/StellarX-Project-2]
 Navigate into the project folder
 cd returnee-reintegration-loan
 Install required dependencies
@@ -46,4 +46,3 @@ Ron Michael C. Legaspi — @[legaspi-ronmichael]
 Gabriel Balang - @[lionyde]
 Avril Lavigne Pascua - @[sunnymingming]
 License
-MIT
