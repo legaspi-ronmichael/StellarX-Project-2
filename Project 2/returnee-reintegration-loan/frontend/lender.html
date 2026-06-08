@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lender Portal - Returnee Reintegration Loan</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Load Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="lender.html" class="logo">
+        <div class="logo-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)); box-shadow: var(--glow-shadow-indigo);">L</div>
+        <span class="brand-gradient">RRL Lender Console</span>
+      </a>
+      <div class="nav-links">
+        <span style="color: var(--text-muted); font-size: 0.9rem;">Logged in: <strong id="nav-user-name" style="color: var(--text-primary);">...</strong></span>
+        <button id="nav-logout-btn" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 1500px; margin: 2rem auto; padding: 0 2rem; display: flex; flex-direction: column; gap: 2rem;">
+    <div id="lender-alert-container"></div>
+
+    <!-- Portfolio metrics cards -->
+    <section class="portfolio-grid">
+      <div class="glass-panel portfolio-card">
+        <h4>Total Applications</h4>
+        <p class="portfolio-val" id="metric-total-apps">0</p>
+      </div>
+      <div class="glass-panel portfolio-card">
+        <h4>Total Disbursed</h4>
+        <p class="portfolio-val" id="metric-disbursed">PHP 0</p>
+      </div>
+      <div class="glass-panel portfolio-card">
+        <h4>Outstanding Portfolio</h4>
+        <p class="portfolio-val" id="metric-outstanding" style="color: var(--warning);">PHP 0</p>
+      </div>
+      <div class="glass-panel portfolio-card">
+        <h4>Avg. Stellar Score</h4>
+        <p class="portfolio-val" id="metric-avg-score" style="color: var(--accent-indigo);">0</p>
+      </div>
+    </section>
+
+    <!-- Main Workspace (Table + Audit Panel split) -->
+    <div class="audit-details-view">
+      <!-- Left side: Applications Table -->
+      <section class="glass-panel audit-table-card">
+        <h3 style="margin-bottom: 1rem;">Reintegration Micro-Loan Pipeline</h3>
+        
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Applicant</th>
+              <th>Stellar Score</th>
+              <th>Requested</th>
+              <th>Business Sector</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="loans-table-body">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 3rem;">Loading pipeline...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Right side: Deep Audit Pane (Hidden initially until selection) -->
+      <section class="glass-panel" id="audit-details-pane" style="display: none; padding: 2rem; flex-direction: column; gap: 1.5rem; height: fit-content; position: sticky; top: 90px;">
+        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <h2 id="audit-name">Maria Santos</h2>
+            <p id="audit-wallet" style="color: var(--accent-cyan); font-family: monospace; font-size: 0.8rem; word-break: break-all; margin-top: 0.25rem;">G...</p>
+          </div>
+          <span class="score-badge" id="audit-grade-badge">Grade A</span>
+        </div>
+
+        <!-- Metric badges -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+          <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: 8px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Longevity</div>
+            <div style="font-weight: 700; font-size: 0.95rem;" id="audit-metric-longevity">-</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: 8px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Consistency</div>
+            <div style="font-weight: 700; font-size: 0.95rem;" id="audit-metric-consistency">-</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: 8px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Avg. Inflow</div>
+            <div style="font-weight: 700; font-size: 0.95rem;" id="audit-metric-inflow">-</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: 8px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Savings Rate</div>
+            <div style="font-weight: 700; font-size: 0.95rem;" id="audit-metric-savings">-</div>
+          </div>
+        </div>
+
+        <!-- Ledger Graph in sidepane -->
+        <div style="height: 180px; position: relative;">
+          <canvas id="auditChart"></canvas>
+        </div>
+
+        <div>
+          <h4 style="margin-bottom: 0.5rem;">Business Reintegration Plan</h4>
+          <p id="audit-plan-text" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 10px; max-height: 120px; overflow-y: auto;"></p>
+        </div>
+
+        <!-- Decision Form (Visible only if status is applied) -->
+        <div id="decision-form-container" style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+          <h4 style="margin-bottom: 1rem;">Credit Decision & Settle Details</h4>
+          
+          <form id="form-audit-decision">
+            <div class="form-group">
+              <label for="decision-status">Status Choice</label>
+              <select id="decision-status" class="form-control" style="background: rgba(15, 23, 42, 0.8);">
+                <option value="approved">Approve & Disburse via Stellar</option>
+                <option value="rejected">Reject Application</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="decision-feedback">Reviewer Comments / Terms Feedback</label>
+              <textarea id="decision-feedback" class="form-control" rows="2" placeholder="e.g. Terms approved. Settlement address validated." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <span>Post Decision</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Decision Complete Info Box (Visible if status is approved/disbursed or rejected) -->
+        <div id="decision-complete-container" style="border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.85rem; display: none;">
+          <h4 style="margin-bottom: 0.5rem;">Audit Settled</h4>
+          <p id="decision-term-summary" style="margin-bottom: 0.5rem; color: var(--accent-cyan);"></p>
+          <p id="decision-tx-summary" style="font-family: monospace; color: var(--text-muted); word-break: break-all;"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/lender.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "id": "lender-1",
+      "name": "Lender Admin",
+      "email": "lender@rrl.com",
+      "password": "password123",
+      "role": "lender"
+    },
+    {
+      "id": "user-1780896277875",
+      "name": "Ryan Neri",
+      "email": "ryanneri@gmail.com",
+      "password": "password123",
+      "role": "ofw",
+      "walletAddress": null
+    },
+    {
+      "id": "user-1780896373758",
+      "name": "Ron Michael C. Legaspi",
+      "email": "legaspi_ronmichael@plpasig.eduph",
+      "password": "password123",
+      "role": "ofw",
+      "walletAddress": "mock_ofw_excellent"
+    },
+    {
+      "id": "user-1780897192909",
+      "name": "Juan Dela Cruz",
+      "email": "juan.delacruz@stellar-ofw.org",
+      "password": "passowrd123",
+      "role": "ofw",
+      "walletAddress": "GARBLW73NKHPLBONMOBVVNUOYR775GTGPLYY37X2CAG3TWEGQNVW3BBS"
+    }
+  ],
+  "loans": [
+    {
+      "id": "loan-1780896883762",
+      "userId": "user-1780896373758",
+      "applicantName": "Ron Michael C. Legaspi",
+      "walletAddress": "mock_ofw_excellent",
+      "amount": 10000,
+      "businessCategory": "Retail & Sari-Sari Store",
+      "businessDescription": "hehe",
+      "termMonths": 12,
+      "status": "applied",
+      "creditScore": 925,
+      "creditGrade": "A",
+      "appliedDate": "2026-06-08T05:34:43.762Z",
+      "approvedDate": null,
+      "disbursedDate": null,
+      "interestRate": 3,
+      "monthlyRepayment": 858.33,
+      "remainingBalance": 10300,
+      "repaymentHistory": []
+    }
+  ]
+}

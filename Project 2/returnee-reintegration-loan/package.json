@@ -1,0 +1,15 @@
+{
+  "name": "returnee-reintegration-loan",
+  "version": "1.0.0",
+  "description": "OFW Micro-loans using overseas Stellar history as credit evidence.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node backend/verify.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

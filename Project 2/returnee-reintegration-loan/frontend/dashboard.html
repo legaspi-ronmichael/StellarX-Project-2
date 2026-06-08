@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OFW Dashboard - Returnee Reintegration Loan</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Load Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon">R</div>
+        <span class="brand-gradient">RRL OFW Portal</span>
+      </a>
+      <div class="nav-links">
+        <span style="color: var(--text-muted); font-size: 0.9rem;">Logged in as: <strong id="nav-user-name" style="color: var(--text-primary);">...</strong></span>
+        <button id="nav-logout-btn" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-grid">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="glass-panel user-profile-card">
+        <div class="avatar" id="user-avatar">?</div>
+        <h4 id="user-fullname" style="margin-bottom: 0.25rem;">...</h4>
+        <p id="user-email" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">...</p>
+        <div id="sidebar-wallet-badge" style="font-size: 0.75rem; color: var(--accent-cyan); word-break: break-all;">No Wallet Linked</div>
+      </div>
+
+      <div class="sidebar-nav">
+        <a href="#wallet" class="sidebar-link active" id="nav-wallet">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+            <line x1="12" y1="10" x2="12" y2="10"></line>
+            <circle cx="18" cy="12" r="2"></circle>
+          </svg>
+          Connect Wallet
+        </a>
+        <a href="#credit" class="sidebar-link" id="nav-credit" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Credit Analytics
+        </a>
+        <a href="#apply" class="sidebar-link" id="nav-apply" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+          Apply for Loan
+        </a>
+        <a href="#status" class="sidebar-link" id="nav-status" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 14 14"></polyline>
+          </svg>
+          Active Loan Status
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="dashboard-main">
+      <div id="dashboard-alert-container"></div>
+
+      <!-- panel 1: Connect Wallet -->
+      <section id="panel-wallet" class="glass-panel wallet-box">
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; width: 100%;">
+          <!-- Left side: Connection Form & Presets -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1.5rem; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+              <div class="wallet-box-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </div>
+              <div>
+                <h2 class="gradient-text" style="margin: 0;">Link Your Stellar Wallet</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;">Enter your Stellar public address to pull ledger history and analyze credit eligibility.</p>
+              </div>
+            </div>
+
+            <form id="form-connect-wallet" style="width: 100%; margin-top: 0.5rem;">
+              <div class="form-group">
+                <label for="stellar-key-input">Stellar Public Key (G...)</label>
+                <input type="text" id="stellar-key-input" class="form-control" placeholder="e.g. GBK... or mock_ofw_excellent" required>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <span>Verify & Connect Wallet</span>
+              </button>
+            </form>
+
+            <div style="border-top: 1px solid var(--border-color); width: 100%; padding-top: 1.5rem; margin-top: 0.5rem;">
+              <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">Stellar Simulation Presets</h4>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Quick-test the credit scoring using one of our mock user profiles:</p>
+              
+              <div class="wallet-presets">
+                <div class="preset-card" data-key="mock_ofw_excellent">
+                  <h5>Maria Santos (Excellent Profile)</h5>
+                  <p>Score: 925 (Grade A) • Consistent remittances & high savings.</p>
+                </div>
+                <div class="preset-card" data-key="mock_ofw_good">
+                  <h5>Juan Dela Cruz (Good Profile)</h5>
+                  <p>Score: 765 (Grade B) • Regular remittances, moderate savings.</p>
+                </div>
+                <div class="preset-card" data-key="mock_ofw_fair">
+                  <h5>Arnel Bautista (Fair Profile)</h5>
+                  <p>Score: 610 (Grade C) • Minor gaps in transfers, lower savings.</p>
+                </div>
+                <div class="preset-card" data-key="mock_ofw_poor">
+                  <h5>Grace Lim (Poor Profile)</h5>
+                  <p>Score: 420 (Grade D) • New wallet, minimal activity history.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Platform Guide Card -->
+          <div style="background: rgba(99, 102, 241, 0.02); border: 1px solid rgba(99, 102, 241, 0.15); padding: 2rem; border-radius: 16px; display: flex; flex-direction: column; gap: 1.5rem; height: fit-content;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">How It Works</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <div>
+                <h5 style="color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">1. Link Your Wallet</h5>
+                <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.45;">Paste your public address (starting with 'G') or select a simulation preset. This is completely secure: we only audit public ledger transaction records and never request private keys.</p>
+              </div>
+              
+              <div>
+                <h5 style="color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">2. Audit History</h5>
+                <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.45;">Our algorithm automatically evaluates 4 financial markers: Account Longevity, Remittance Consistency, average cashflow volume, and Savings rate.</p>
+              </div>
+              
+              <div>
+                <h5 style="color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">3. Secure Capital</h5>
+                <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.45;">Qualified OFWs (Grades A, B, or C) receive local business micro-loans from PHP 25,000 up to PHP 100,000 at low rates of 3% to 8% p.a.</p>
+              </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-cyan);">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Ledger audit is powered securely by Stellar Horizon.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Credit Analytics (Hidden initially) -->
+      <section id="panel-credit" style="display: none; flex-direction: column; gap: 2rem;">
+        <div class="score-flex-grid">
+          <!-- Score Gauge Card -->
+          <div class="glass-panel score-panel">
+            <h3 style="margin-bottom: 1rem; color: var(--text-muted); font-size: 1.1rem; text-transform: uppercase;">Stellar Credit Profile</h3>
+            <div class="score-radial">
+              <svg class="score-svg" viewBox="0 0 120 120">
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--accent-cyan)" />
+                    <stop offset="100%" stop-color="var(--accent-indigo)" />
+                  </linearGradient>
+                </defs>
+                <circle class="track" cx="60" cy="60" r="50"></circle>
+                <circle class="progress" id="score-ring" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"></circle>
+              </svg>
+              <div class="score-text-overlay">
+                <span class="score-val" id="credit-score-val">0</span>
+                <span class="score-max">of 1000</span>
+              </div>
+            </div>
+            <span class="score-badge" id="credit-grade-badge">Grade -</span>
+            <p id="credit-score-summary" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></p>
+          </div>
+
+          <!-- Score Breakdown Card -->
+          <div class="glass-panel metrics-breakdown">
+            <h3>Credit Ledger Score Breakdown</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Scoring factors compiled cryptographically from Stellar chain Horizon logs.</p>
+            
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <h5>Wallet Longevity</h5>
+                <p id="metric-longevity">-</p>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Weight: 15% (Account longevity)</span>
+              </div>
+              <div class="metric-item">
+                <h5>Remittance Consistency</h5>
+                <p id="metric-consistency">-</p>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Weight: 30% (Monthly deposit rate)</span>
+              </div>
+              <div class="metric-item">
+                <h5>Average Inflow Volume</h5>
+                <p id="metric-inflow">-</p>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Weight: 25% (Sustained cash inflow)</span>
+              </div>
+              <div class="metric-item">
+                <h5>Stellar Savings Rate</h5>
+                <p id="metric-savings">-</p>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Weight: 30% (Balance retention)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ledger History Chart Card -->
+        <div class="glass-panel history-section">
+          <h3>Stellar Ledger Cashflow Logs (12-Month Window)</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Tracking incoming remittances (inflow), payments (outflow), and wallet native balance in XLM.</p>
+          <div class="chart-wrapper">
+            <canvas id="remittanceChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Apply for Loan (Hidden initially) -->
+      <section id="panel-apply" class="glass-panel" style="display: none; padding: 2.5rem;">
+        <h2>Apply for Reintegration Loan</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Configure your business micro-loan terms based on your Stellar Credit Grade. Interest rates and loan limits are locked automatically.</p>
+
+        <form id="form-apply-loan">
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem;">
+            <div>
+              <div class="form-group">
+                <label>Loan Amount (PHP)</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-cyan);" id="loan-amount-display">PHP 10,000</span>
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">Max: <strong id="loan-max-display">PHP 25,000</strong></span>
+                </div>
+                <input type="range" id="loan-amount-slider" class="loan-slider" min="5000" max="25000" step="5000" value="10000">
+                <div class="slider-val-box">
+                  <span>Min: PHP 5,000</span>
+                  <span>Max Limit based on Grade</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="loan-term">Repayment Term (Months)</label>
+                <select id="loan-term" class="form-control" style="background: rgba(15, 23, 42, 0.8);">
+                  <option value="6">6 Months</option>
+                  <option value="12" selected>12 Months</option>
+                  <option value="18">18 Months</option>
+                  <option value="24">24 Months</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="loan-category">Proposed Business Sector</label>
+                <select id="loan-category" class="form-control" style="background: rgba(15, 23, 42, 0.8);">
+                  <option value="Retail & Sari-Sari Store">Retail / Sari-Sari Store</option>
+                  <option value="Agriculture & Poultry">Agriculture / Poultry / Fisheries</option>
+                  <option value="Food & Beverage Services">Food Services / Eatery</option>
+                  <option value="Transportation & Logistics">Transportation (Tricycle / Jeepney / Delivery)</option>
+                  <option value="Personal Services">Personal Services (Salon, Tailoring, Repair)</option>
+                  <option value="Cottage Manufacturing">Cottage Manufacturing / Crafts</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Summary right box -->
+            <div style="display: flex; flex-direction: column; justify-content: space-between; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 2rem; border-radius: 16px;">
+              <div>
+                <h4 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-muted);">Loan Summary</h4>
+                
+                <div class="loan-card-details" style="grid-template-columns: 1fr; gap: 1rem; margin-top: 0;">
+                  <div class="loan-summary-box">
+                    <h6>Interest Rate (p.a.)</h6>
+                    <p id="summary-rate" style="color: var(--accent-cyan);">-</p>
+                  </div>
+                  <div class="loan-summary-box">
+                    <h6>Monthly Installment</h6>
+                    <p id="summary-monthly">-</p>
+                  </div>
+                  <div class="loan-summary-box">
+                    <h6>Total Repayment</h6>
+                    <p id="summary-total">-</p>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                <span>Submit Application</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 1.5rem;">
+            <label for="loan-description">Business Reintegration Plan Summary</label>
+            <textarea id="loan-description" class="form-control" rows="4" placeholder="Briefly describe what business you will build with these funds, your target market, and how your overseas skills translate to this business venture..." required></textarea>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel 4: Active Loan Status (Hidden initially) -->
+      <section id="panel-status" class="glass-panel loan-status-panel" style="display: none;">
+        <div class="loan-status-header">
+          <div>
+            <h2 id="loan-status-title">Active Reintegration Loan</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;" id="loan-status-subtitle">Submitted on ...</p>
+          </div>
+          <span class="score-badge" id="loan-status-badge">applied</span>
+        </div>
+
+        <div id="loan-active-container">
+          <div class="loan-card-details" style="margin-bottom: 2rem;">
+            <div class="loan-summary-box">
+              <h6>Approved Amount</h6>
+              <p id="status-amount" style="color: var(--accent-cyan);">-</p>
+            </div>
+            <div class="loan-summary-box">
+              <h6>Outstanding Balance</h6>
+              <p id="status-balance" style="color: var(--warning);">-</p>
+            </div>
+            <div class="loan-summary-box">
+              <h6>Monthly Installment</h6>
+              <p id="status-monthly">-</p>
+            </div>
+          </div>
+
+          <div class="loan-repayment-grid">
+            <!-- Left: Repayment Action -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 14px;">
+              <h4 style="margin-bottom: 0.5rem;">Simulate Stellar Repayment</h4>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Send installment payments directly to the lender pool using Stellar. This simulates a smart contract payment action.</p>
+              
+              <form id="form-repay-loan">
+                <div class="form-group">
+                  <label for="repay-amount-input">Payment Amount (PHP)</label>
+                  <input type="number" id="repay-amount-input" class="form-control" placeholder="Installment amount" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                  <span>Submit Simulated Stellar Payment</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Right: Repayment Logs -->
+            <div>
+              <h4 style="margin-bottom: 1rem;">Repayment Transaction Ledger</h4>
+              <div class="payment-history-list" id="payment-logs-list">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.85rem;">No repayments logged yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="loan-denied-message" style="display: none; text-align: center; padding: 2rem;">
+          <h4 style="color: var(--danger); margin-bottom: 0.5rem;">Application Rejected</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;" id="denied-feedback-text"></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
