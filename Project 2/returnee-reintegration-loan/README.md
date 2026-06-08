@@ -9,7 +9,7 @@ Wallet Connection: The returning OFW registers on the portal and connects their 
 Instant Credit Audit: The platform's scoring engine runs a credit analysis by querying transaction records from the Stellar ledger, instantly calculating a rating from 300 to 1000 and assigning a grade (A, B, or C).
 Interactive Analytics: The OFW views their credit breakdown metrics and an interactive Chart.js cashflow graph displaying monthly inflows, outflows, and running balances.
 Loan Application: Qualified applicants slide the loan estimator to configure principal amount and terms based on their grade (e.g. Grade A unlocks up to PHP 100,000 at 3% interest p.a.), submitting their business sector details.
-Lender Audit & Settle: A financial representative logs in, inspects the pending applications pipeline, audits the applicant's ledger history charts, and approves the loan to trigger a simulated Stellar disbursement.
+Lender Audit \& Settle: A financial representative logs in, inspects the pending applications pipeline, audits the applicant's ledger history charts, and approves the loan to trigger a simulated Stellar disbursement.
 Simulated Repayments: The OFW makes installment payments on their dashboard, simulating a smart contract repayment transaction back to the lender pool.
 How It Uses Stellar
 Ledger Auditability (Horizon API): Directly queries ledger accounts and payment lists on the Stellar network to verify account longevity and analyze transaction consistency.
@@ -17,7 +17,7 @@ Cross-Border Financial Identity: Builds a verifiable, decentralized credit profi
 Simulated Payment Flows: Models capital pool disbursement and installment repayment structures using on-chain transaction hashes.
 Why Stellar: Stellar's low transaction fees, focus on remittances, and built-in cashflow properties make it the perfect platform for cross-border financial identity and inclusive microfinance.
 Track
-Track 2 Financial Inclusion & Everyday Payments (Alternative: Track 5 Social Impact)
+Track 2 Financial Inclusion \& Everyday Payments (Alternative: Track 5 Social Impact)
 
 Tech Stack
 Backend: Node.js, Express.js
@@ -26,19 +26,27 @@ Frontend: HTML5, Vanilla CSS3 (harmonious HSL variables, glassmorphism, responsi
 Stellar SDK / Horizon Queries: Native Node global fetch API for lightweight ledger queries.
 Network: testnet
 Key Utilities: Node net module for dynamic port collision-resistance.
-Setup & Run
+Setup \& Run
 Follow these instructions to run the project locally:
 
 bash
 
 
+
 # Clone the repository
-git clone [your-repo-link]
+
+git clone \[your-repo-link]
+
 # Navigate into the project folder
+
 cd returnee-reintegration-loan
+
 # Install required dependencies
+
 npm install
+
 # Start the application server
+
 node server.js
 Note: The server includes a built-in port scanner. If port 3000 is occupied, it will automatically search and bind to the next free port (e.g., 3001, 3002) and print the active local URL to the terminal.
 
@@ -48,6 +56,11 @@ Horizon API Endpoint: https://horizon-testnet.stellar.org
 Contract IDs: N/A (utilizes Horizon transaction auditing)
 Asset issuers: N/A
 Team
-Ron Michael C. Legaspi — @[your-github-username]
+Ron Michael C. Legaspi — @\[legaspi-ronmichael]
+
+Gabriel Balang - @\[lionyde]
+
+Avril Lavigne Pascua - @\[sunnymingming]
 License
 MIT
+
