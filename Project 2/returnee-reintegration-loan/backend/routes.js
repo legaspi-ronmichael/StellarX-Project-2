@@ -64,7 +64,7 @@ module.exports = function(app) {
     }
 
     const db = readDb();
-    const existing = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const existing = db.users.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
     if (existing) {
       return res.status(400).json({ error: "User already exists with this email." });
     }
@@ -72,8 +72,8 @@ module.exports = function(app) {
     const newUser = {
       id: 'user-' + Date.now(),
       name,
-      email: email.toLowerCase(),
-      password, // In a real app we'd hash this, but simple text is fine for prototype
+      email: email.trim().toLowerCase(),
+      password: password.trim(), // In a real app we'd hash this, but simple text is fine for prototype
       role, // 'ofw' or 'lender'
       walletAddress: null
     };
@@ -98,7 +98,7 @@ module.exports = function(app) {
     }
 
     const db = readDb();
-    const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    const user = db.users.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password.trim());
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials." });
     }
