@@ -28,7 +28,7 @@ Follow these instructions to run the project locally:
 bash
 
 Clone the repository
-git clone [your-repo-link]
+git clone []
 Navigate into the project folder
 cd returnee-reintegration-loan
 Install required dependencies
