@@ -35,7 +35,7 @@ bash
 
 # Clone the repository
 
-git clone \[your-repo-link]
+git clone \[https://github.com/legaspi-ronmichael/StellarX-Project-2]
 
 # Navigate into the project folder
 
@@ -62,5 +62,4 @@ Gabriel Balang - @\[lionyde]
 
 Avril Lavigne Pascua - @\[sunnymingming]
 License
-MIT
 
